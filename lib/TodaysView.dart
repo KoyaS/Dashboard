@@ -4,9 +4,10 @@ import 'package:Dashboard/ToDoModule.dart';
 import 'package:Dashboard/WeatherModule.dart';
 import 'package:Dashboard/NewsModule.dart';
 import 'package:flutter/material.dart';
-import 'googleAuth.dart' as gAuth;
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'googleAuth.dart' as gAuth;
 import 'package:googleapis/gmail/v1.dart' as gmail;
 import 'package:googleapis_auth/auth_browser.dart' as auth;
 
@@ -18,6 +19,7 @@ class TodaysView extends StatefulWidget {
 class _TodaysViewState extends State<TodaysView> {
   gmail.GmailApi gmailApi;
   auth.AutoRefreshingAuthClient authClient;
+  String profileDataString;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class _TodaysViewState extends State<TodaysView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Wrap(
         // children: [ClockModule(), NewsModule(), WeatherModule(),],
-        children: [ToDoModule(),
+        children: [ToDoModule(client: authClient),
           // EmailModule(gmailApi: gmailApi),ClockModule(), NewsModule(), WeatherModule(),
         ],
         //
@@ -43,9 +45,10 @@ class _TodaysViewState extends State<TodaysView> {
                 List temp = await gAuth.showSignInPopup(context);
                 setState(() {
                   // gmailApi = temp;
-                  print(temp);
+                  // print(temp);
                   gmailApi = temp[0];
                   authClient = temp[1];
+                  // profileDataString = temp[2];
                 });
               },
             ),
@@ -111,7 +114,7 @@ class ProfilePictureButton extends StatelessWidget {
             } else {
               return (Text('hi'));
             }
-            return (Text('will never get here'));
+            return (Text('This is a required filler for switch block'));
           default:
             return (Text('default'));
         }

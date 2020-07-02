@@ -42,27 +42,39 @@ Future<List> showSignInPopup(BuildContext context) async {
                   ],
                 )),
           ));
-  print('HEREHEREHEREHERE');
-  return([api, client]);
+  // String profileDataString = await getProfileData('koyavsaito@gmail.com', client);
+  return ([api, client]);
 }
 
 Future<List> authorize() async {
   print('authorizing...');
-  var id = new auth.ClientId(
-      DotEnv().env['GOOGLE_APP_ID'],
-      null);
+  var id = new auth.ClientId(DotEnv().env['GOOGLE_APP_ID'], null);
 
-  var scopes = [gmail.GmailApi.GmailReadonlyScope, 'https://www.googleapis.com/auth/userinfo.profile']; // gmail, profile photo
-
+  var scopes = [
+    gmail.GmailApi.GmailReadonlyScope,
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/datastore',
+  ]; // gmail, profile photo
 
   List apiRef_authedClient = await auth
       .createImplicitBrowserFlow(id, scopes)
       .then((auth.BrowserOAuth2Flow flow) async {
-    return (await flow.clientViaUserConsent().then((auth.AutoRefreshingAuthClient client) {
+    return (await flow
+        .clientViaUserConsent()
+        .then((auth.AutoRefreshingAuthClient client) {
       flow.close();
       return ([gmail.GmailApi(client), client]);
     }));
   });
-  return(apiRef_authedClient);
-
+  return (apiRef_authedClient);
 }
+
+// Future<String> getProfileData(String email, auth.AutoRefreshingAuthClient authClient) async {
+//   print('getting saved profile data...');
+//   var profile = await authClient.get(
+//       'https://firestore.googleapis.com/v1beta1/projects/${DotEnv().env['GOOGLE_PROJECT_ID']}/databases/(default)/documents/${DotEnv().env['FIRESTORE_USER_PROFILE_PATH']}/' +
+//           email);
+//   // print('getProfileData:');
+//   // print(profile.body);
+//   return(profile.body);
+// }
