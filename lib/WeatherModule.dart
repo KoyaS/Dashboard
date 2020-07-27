@@ -85,6 +85,7 @@ class WeatherModuleContainer extends StatelessWidget {
       width: 400,
       height: 400,
       // clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.all(5),
       child: Column(
         children: [
           ClipRRect(

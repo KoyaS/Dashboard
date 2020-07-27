@@ -78,19 +78,26 @@ class _ToDoModuleState extends State<ToDoModule> {
     List<Task> taskObjectList = [];
 
     Map<String, dynamic> databaseOutput = json.decode(rawJSON);
-    List<dynamic> taskList =
-        databaseOutput['fields']['taskList']['arrayValue']['values'];
+    // List<dynamic> taskList =
+    //     databaseOutput['fields']['taskList']['arrayValue']['values'];
 
-    int index = 0;
-    taskList.forEach((task) {
-      Map taskInfo = task['mapValue']['fields'];
-      String taskName = taskInfo['task']['stringValue'];
-      bool completed = taskInfo['completed']['booleanValue'];
-      Task newTask =
-          new Task(index: index, taskName: taskName, completed: completed);
-      taskObjectList.add(newTask);
-      index++;
-    });
+    // int index = 0;
+    // taskList.forEach((task) {
+    //   Map taskInfo = task['mapValue']['fields'];
+    //   String taskName = taskInfo['task']['stringValue'];
+    //   bool completed = taskInfo['completed']['booleanValue'];
+    //   Task newTask =
+    //       new Task(index: index, taskName: taskName, completed: completed);
+    //   taskObjectList.add(newTask);
+    //   index++;
+    // });
+
+    taskObjectList.add(Task(index:0, completed:true, taskName:'Purchase cake'));
+    taskObjectList.add(Task(index:1, completed:false, taskName:'Set up tent'));
+    taskObjectList.add(Task(index:2, completed:true, taskName:'Clean out the garage'));
+    taskObjectList.add(Task(index:3, completed:false, taskName:'Call Sarah'));
+    taskObjectList.add(Task(index:4, completed:false, taskName:'Search for good restraunts'));
+    taskObjectList.add(Task(index:5, completed:true, taskName:'Find missing shoes'));
 
     return taskObjectList;
   }

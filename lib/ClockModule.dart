@@ -20,6 +20,7 @@ class _ClockModuleState extends State<ClockModule> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(5),
       width: 400,
       height: 200,
       child: Center(
