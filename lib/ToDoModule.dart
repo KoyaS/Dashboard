@@ -4,6 +4,7 @@ import 'package:googleapis_auth/auth_browser.dart' as auth;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ToDoModule extends StatefulWidget {
@@ -27,8 +28,8 @@ class _ToDoModuleState extends State<ToDoModule> {
 
   @override
   Widget build(BuildContext context) {
-    print('prof data string');
-    print(widget.profileDataString);
+    // print('prof data string');
+    // print(widget.profileDataString);
     // if (widget.profileDataString != null) {
     //   decodeTasksFromJSON(widget.profileDataString);
     // }
@@ -45,7 +46,7 @@ class _ToDoModuleState extends State<ToDoModule> {
       );
     } else {
       if (widget.client == null) {
-        return(Text('please log in'));
+        return (Text('please log in'));
       } else {
         getProfileData('koyavsaito@gmail.com', widget.client);
         return (CircularProgressIndicator());
@@ -96,11 +97,22 @@ class _ToDoModuleState extends State<ToDoModule> {
 
   void taskCheckboxChanged(int index, bool newValue) {
     setState(() {
-      taskObjects[index].completed = newValue;
+      if (widget.client != null) {
+        print('Setting ' +
+            taskObjects[index].taskName.toString() +
+            ' to ' +
+            newValue.toString());
+        taskObjects[index].completed = newValue;
+        updateFieldState(
+            'fguacamole@gmail.com', taskObjects[index].taskName, newValue);
+      } else {
+        print('client is null and this was called somehow, to do module');
+      }
     });
   }
 
-  getProfileData(String email, auth.AutoRefreshingAuthClient authClient) async {
+  void getProfileData(
+      String email, auth.AutoRefreshingAuthClient authClient) async {
     print('getting saved profile data...');
     var profile = await authClient.get(
         'https://firestore.googleapis.com/v1beta1/projects/${DotEnv().env['GOOGLE_PROJECT_ID']}/databases/(default)/documents/${DotEnv().env['FIRESTORE_USER_PROFILE_PATH']}/' +
@@ -112,6 +124,83 @@ class _ToDoModuleState extends State<ToDoModule> {
       widget.profileDataString = profile.body;
     });
   }
+
+  void updateFieldState(String email, String field, bool newValue) {
+    print('saving profile data with field: ' + field);
+
+    String userPath =
+        'projects/${DotEnv().env['GOOGLE_PROJECT_ID']}/databases/(default)/${DotEnv().env['FIRESTORE_USER_PROFILE_PATH']}/${email}';
+
+    Map testBody = {
+      "name":
+          "projects/flutter-dashboard-280203/databases/(default)/documents/Root/userData/Profiles/fguacamole@gmail.com",
+      // "fields": {
+      //   field: {"booleanValue": newValue}
+      // }
+    };
+
+    // widget.client.send(http.Request('PATCH', Uri.parse('https://firestore.googleapis.com/v1beta1/${userPath}?updateMask.fieldPaths=${field}',)));
+    // print(createFieldBody(field, newValue, userPath));
+    // widget.client.patch(
+    //   'http://firestore.googleapis.com/v1beta1/${userPath}?updateMask.fieldPaths=${field}',
+    //   body: createFieldBody(field, newValue, userPath),
+    //   // body: testBody,
+    //   headers: {
+    //     'Access-Control-Allow-Origin': '*',
+    //     // 'Access-Control-Allow-Credentials': 'true',
+    //     // 'credentials': 'include',
+    //     // 'mode': 'cors',
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //   }
+    // );
+
+    widget.client.patch(
+      'http://firestore.googleapis.com/v1beta1/${userPath}?updateMask.fieldPaths=${field}',
+      body: '{"name":"projects/flutter-dashboard-280203/databases/(default)/documents/Root/userData/Profiles/fguacamole@gmail.com","fields":{"tes":{"booleanValue":false}}}'
+    );
+  }
+
+  String createFieldBody(String field, var value, String userPath) {
+    String fieldString = '"${field}":' + createValueHolder(value);
+    return ('''{
+      "name": ${userPath},
+      "fields": {${fieldString}}
+    }''');
+  }
+
+  String createValueHolder(var value) {
+    String valueHolder = '';
+    if (value is int) {
+      valueHolder = '"integerValue":' + value.toString();
+    } else if (value is bool) {
+      valueHolder = '"booleanValue":';
+      if (value == true) {
+        valueHolder += 'true';
+      } else {
+        valueHolder += 'false';
+      }
+    } else if (value is String) {
+      valueHolder = '"stringValue":"${value.toString()}"';
+    } else if (value is List) {
+      int count = 1;
+      String listHolder = '';
+      for (var v in value) {
+        //valueHolder = createValueHolder(v);
+        listHolder += createValueHolder(v);
+        if (count != value.length) {
+          listHolder += ',';
+        }
+        count++;
+        if (v is List) {
+          print('Database no like nested arrays');
+          return (null);
+        }
+      }
+      valueHolder = '"arrayValue":{"values":[${listHolder}]}';
+    }
+    return ('{${valueHolder}}');
+  }
 }
 
 class TaskList extends StatelessWidget {
@@ -122,6 +211,7 @@ class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(5),
       width: 400,
       height: 400,
       child: ListView(
@@ -135,7 +225,7 @@ class TaskList extends StatelessWidget {
                   )))
               .toList()),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

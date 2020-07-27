@@ -54,6 +54,7 @@ Future<List> authorize() async {
     gmail.GmailApi.GmailReadonlyScope,
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/datastore',
+    // 'https://www.googleapis.com/auth/cloud-platform',
   ]; // gmail, profile photo
 
   List apiRef_authedClient = await auth

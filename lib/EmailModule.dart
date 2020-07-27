@@ -138,10 +138,10 @@ class EmailModuleContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: EdgeInsets.all(50),
+      margin: EdgeInsets.all(5),
       width: 400,
       height: 400,
-      padding: EdgeInsets.symmetric(horizontal:10),
+      // padding: EdgeInsets.symmetric(horizontal:10),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,7 +151,7 @@ class EmailModuleContainer extends StatelessWidget {
           ],
         ),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(

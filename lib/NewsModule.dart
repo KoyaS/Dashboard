@@ -21,6 +21,7 @@ class _NewsModuleState extends State<NewsModule> {
   Widget build(BuildContext context) {
     return Container(
       // margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(5),
       width: width,
       height: height,
       // clipBehavior: Clip.antiAlias,

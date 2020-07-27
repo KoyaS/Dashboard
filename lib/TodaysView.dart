@@ -28,7 +28,7 @@ class _TodaysViewState extends State<TodaysView> {
       body: Wrap(
         // children: [ClockModule(), NewsModule(), WeatherModule(),],
         children: [ToDoModule(client: authClient),
-          // EmailModule(gmailApi: gmailApi),ClockModule(), NewsModule(), WeatherModule(),
+          EmailModule(gmailApi: gmailApi),ClockModule(), NewsModule(), WeatherModule(),
         ],
         //
       ),
@@ -66,7 +66,8 @@ class _TodaysViewState extends State<TodaysView> {
     print('getting photo...');
     var profile = await authClient
         .get('https://people.googleapis.com/v1/people/me?personFields=photos');
-    print(profile.body);
+    // print('profile photo');
+    // print(profile.body);
     Map<String, dynamic> parsed = json.decode(profile.body);
     Map<String, dynamic> photoInfo = parsed['photos'][0];
     String url = photoInfo['url'];
