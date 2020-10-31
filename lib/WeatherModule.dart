@@ -29,6 +29,7 @@ class _WeatherModuleState extends State<WeatherModule> {
 
   @override
   Widget build(BuildContext context) {
+    print('made IT TO HERE!');
     return FutureBuilder(
       future: Future.wait([futureReport, address]),
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -39,7 +40,8 @@ class _WeatherModuleState extends State<WeatherModule> {
           // return(Text(address.city + weatherReport.current['temp'].round().toString()));
           return (WeatherModuleContainer(
               temp: weatherReport.current['temp'].round().toString(),
-              location: address.city + ', ' + address.country));
+              location: address.city + ', ' + address.country,
+              conditionCode: weatherReport.current['weather'][0]['id']));
         } else {
           return CircularProgressIndicator();
         }
@@ -75,8 +77,9 @@ class WeatherModuleContainer extends StatelessWidget {
 
   final String temp;
   final String location;
-  // , this.location
-  const WeatherModuleContainer({@required this.temp, @required this.location});
+  final int conditionCode;
+  
+  const WeatherModuleContainer({@required this.temp, @required this.location, @required this.conditionCode});
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +95,8 @@ class WeatherModuleContainer extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(borderRadius),
                 topRight: Radius.circular(borderRadius)),
-            child: new Image.asset('images/sun_clouds.png',
-                width: double.infinity),
+            child: conditionToImage(conditionCode),
+            // new Image.asset('images/sun_clouds.png', width: double.infinity),
           ),
           Spacer(
             flex: 1,
@@ -133,6 +136,27 @@ class WeatherModuleContainer extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+// Find these weather codes here: https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
+// Many weren't included in this chain of conditionals
+Image conditionToImage(int condition) {
+
+  if (200<=condition && condition<=232) { // Thunderstorm
+    return(new Image.asset('images/weather/rain_lightning.png', width: double.infinity));
+  } else if (300<=condition && condition<=321) { // Drizzle
+    return(new Image.asset('images/weather/moderate_rain.png', width: double.infinity));
+  } else if (500 <= condition && condition <= 531) { // Rain
+    return(new Image.asset('images/weather/moderate_rain.png', width: double.infinity));
+  } else if (600 <= condition && condition <= 622) { // Snow
+    return(new Image.asset('images/weather/snow.png', width: double.infinity));
+  } else if (800 == condition) { // Clear
+    return(new Image.asset('images/weather/sun_clouds.png', width: double.infinity));
+  } else if (801 <= condition && condition <= 804) { // Cloudy
+    return(new Image.asset('images/weather/clouds.png', width: double.infinity));
+  } else { // Hit em with the sunny day
+    return(new Image.asset('images/weather/sun_clouds.png', width: double.infinity));
   }
 }
 

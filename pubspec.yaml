@@ -58,7 +58,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/sun_clouds.png
+    - images/weather/sun_clouds.png
+    - images/weather/clouds.png
+    - images/weather/moderate_rain.png
+    - images/weather/rain_lightning.png
+    - images/weather/snow.png
     - .env
   #   - images/a_dot_ham.jpeg
 
