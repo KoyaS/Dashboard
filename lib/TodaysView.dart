@@ -27,8 +27,12 @@ class _TodaysViewState extends State<TodaysView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Wrap(
         // children: [ClockModule(), NewsModule(), WeatherModule(),],
-        children: [ToDoModule(client: authClient),
-          EmailModule(gmailApi: gmailApi),ClockModule(), NewsModule(), WeatherModule(),
+        children: [
+          // ToDoModule(client: authClient),
+          // EmailModule(gmailApi: gmailApi),
+          ClockModule(), 
+          NewsModule(), 
+          WeatherModule(),
         ],
         //
       ),
