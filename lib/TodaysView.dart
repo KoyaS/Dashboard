@@ -25,17 +25,22 @@ class _TodaysViewState extends State<TodaysView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      body: Wrap(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+          child: Center(child:Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         // children: [ClockModule(), NewsModule(), WeatherModule(),],
         children: [
           // ToDoModule(client: authClient),
           // EmailModule(gmailApi: gmailApi),
-          ClockModule(), 
-          NewsModule(), 
+          ClockModule(),
+          NewsModule(),
           WeatherModule(),
         ],
         //
-      ),
+      ))),
       floatingActionButton: () {
         if (gmailApi == null) {
           return (Container(
