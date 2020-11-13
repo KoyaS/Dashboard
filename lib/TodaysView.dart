@@ -20,12 +20,21 @@ class _TodaysViewState extends State<TodaysView> {
   gmail.GmailApi gmailApi;
   auth.AutoRefreshingAuthClient authClient;
   String profileDataString;
+  List<DateTime> sunRiseSetTimes = [];
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomRight,
+            colors: calculateBackgroundColors(),
+            )
+        ),
         width: double.infinity,
         height: double.infinity,
           child: Center(child:Wrap(
@@ -37,7 +46,7 @@ class _TodaysViewState extends State<TodaysView> {
           // EmailModule(gmailApi: gmailApi),
           ClockModule(),
           NewsModule(),
-          WeatherModule(),
+          WeatherModule(setSunRiseSetTimes: setSunRiseSetTimes),
         ],
         //
       ))),
@@ -69,6 +78,29 @@ class _TodaysViewState extends State<TodaysView> {
         }
       }(),
     );
+  }
+
+  /// This code snippet is from https://stackoverflow.com/questions/50081213/how-do-i-use-hexadecimal-color-strings-in-flutter
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  List<Color> calculateBackgroundColors() {
+
+  }
+
+  void setSunRiseSetTimes(List<DateTime> riseSetTimes) {
+    // if (sunRiseSetTimes != []) { // If this is the first time we've assigned sunrise/set times
+    //   setState(() {
+    //     sunRiseSetTimes = riseSetTimes;
+    //   });
+    // } else {
+    //   sunRiseSetTimes = riseSetTimes;
+    // }
+    sunRiseSetTimes = riseSetTimes; // Try doing this without setstate first, if we can then we can save on refreshing the page when we load
   }
 
   Future<String> getProfilePicture() async {

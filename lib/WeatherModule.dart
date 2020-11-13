@@ -12,6 +12,11 @@ final currentLat = "42.280827";
 final currentLon = "-83.743034";
 
 class WeatherModule extends StatefulWidget {
+
+  final Function setSunRiseSetTimes;
+
+  WeatherModule({@required this.setSunRiseSetTimes});
+
   @override
   _WeatherModuleState createState() => _WeatherModuleState();
 }
