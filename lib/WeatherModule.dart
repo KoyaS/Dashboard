@@ -15,7 +15,7 @@ class WeatherModule extends StatefulWidget {
 
   final Function setSunRiseSetTimes;
 
-  WeatherModule({@required this.setSunRiseSetTimes});
+  WeatherModule({@required this.setSunRiseSetTimes}); 
 
   @override
   _WeatherModuleState createState() => _WeatherModuleState();
@@ -41,6 +41,10 @@ class _WeatherModuleState extends State<WeatherModule> {
         if (snapshot.connectionState == ConnectionState.done) {
           WeatherReport weatherReport = snapshot.data[0];
           Address address = snapshot.data[1];
+
+          DateTime sunrise = new DateTime.fromMillisecondsSinceEpoch(weatherReport.current['sunrise']*1000 + weatherReport.body['timezone_offset']);
+          DateTime sunset = new DateTime.fromMillisecondsSinceEpoch(weatherReport.current['sunset']*1000 + weatherReport.body['timezone_offset']);
+          widget.setSunRiseSetTimes(sunrise, sunset);
 
           // return(Text(address.city + weatherReport.current['temp'].round().toString()));
           return (WeatherModuleContainer(
@@ -209,13 +213,15 @@ Future<Address> fetchAddress(String latitude, String longitude) async {
 class WeatherReport {
   final Map<String, dynamic> current;
   final List<dynamic> hourly;
+  final Map<String, dynamic> body;
 
-  WeatherReport({this.current, this.hourly});
+  WeatherReport({this.current, this.hourly, this.body});
 
   factory WeatherReport.fromJSON(Map<String, dynamic> json) {
     return WeatherReport(
       current: json['current'],
       hourly: json['hourly'],
+      body: json,
     );
   }
 
